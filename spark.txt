@@ -1,0 +1,40 @@
+val employeeDF = spark.read.format("csv").option("header", "true").load("filepath.csv")
+val df = spark.read.csv("path",header=true,inferSchema = True)
+employeeDF.show()
+val sumSalaryDF = employeeDF.groupBy("DEPARTMENT_ID").agg(sum("SALARY").alias("total_salary"))
+sumSalaryDF.show()
+
+val text= sc.textFile("/word_count.txt")
+val mapf= text.flatMap(line=>line.split(" "))
+mapf.collect;
+val mapperf=mapf.map(word=>(word,1))
+mapperf.collect;
+val reducerf=mapperf.reduceByKey(_+_)
+reducerf.collect;
+
+val admissionData = sc.textFile("admission_data.txt")
+val greScores = admissionData.map(line => line.split(",")(0).toDouble)
+val totalGreScore = greScores.reduce((x, y) => x + y)
+val numStudents = greScores.count()
+val avgGreScore = totalGreScore / numStudents
+println("Average GRE score: " + avgGreScore)
+
+val admissionData = sc.textFile("admission_data.txt")
+val qualifiedStudents = admissionData.filter(line => line.split(",")(4).toDouble > 0.8)
+val numQualifiedStudents = qualifiedStudents.count()
+println("Number of students with admission chance > 0.8: " + numQualifiedStudents)
+
+CREATE TABLE food (id INT,name STRING,category STRING,calories INT,fat DECIMAL(10,2),protein INT,sodium INT,sugar INT,fiber INT,carbs INT,cholesterol INT,rating DECIMAL(10,2),manufacturer STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+
+
+SELECT SUM(Calories) as total_calories FROM food;
+
+SELECT * FROM food ORDER BY Rating DESC;
+
+CREATE VIEW highly_rated_food AS
+SELECT * FROM food WHERE Rating >= 4;
+SELECT Manufacture, COUNT(*) as count, SUM(Protein), SUM(Vitamin), SUM(Fiber), SUM(Fat), SUM(Sodium), SUM(Sugar)
+FROM food
+GROUP BY Manufacture;

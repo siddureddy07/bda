@@ -1,0 +1,115 @@
+Perform the operations both on pyspark and scala
+
+example of pyspark		----- WORD COUNT -----
+
+words = sc.textFile("/user/in").flatMap(lambda line: line.split(" "))
+a = words.map(lambda word: (word, 1))
+b = a.reduceByKey(lambda a, b:a+b)
+spark-submit wc.py [run on local host]
+
+'''
+from pyspark import SparkContext
+
+if __name__=="__main__":
+    sc = SparkContext("local", "word count")
+    sc.setLogLevel("ERROR")
+
+    lines = sc.textFile("/batch_4/200968196/lab7.txt")
+    words = lines.flatMap(lambda line: line.split(" "))
+    wc = words.countByValue()
+    for word, count in wc.items():
+        print("{}:{}".format(word,count))
+    sc.stop()
+
+'''
+
+
+A>
+
+scala provides both non-parametric and parametric functions.
+
+Non-parametric functions are functions that do not require any arguments. These functions always return the same value, regardless of any input. Some examples of non-parametric functions in Scala are println(), readLine(), and readInt().
+
+Parametric functions, on the other hand, require one or more arguments to be passed in. These functions can return different values based on the input provided. Some examples of parametric functions in Scala are max(), min(), abs(), pow(), sqrt(), sin(), cos(), tan(), and many more.
+
+Scala also supports higher-order functions, which are functions that can take other functions as arguments or return a function as a result. This allows for more advanced functional programming techniques. Some examples of higher-order functions in Scala are map(), flatMap(), filter(), reduce(), and fold().
+
+
+
+
+  // Create an array of integers
+  val numbers = Array(1, 2, 3, 4, 5)
+
+  // Non-parametric function: println()
+  println("Array elements: ")
+  numbers.foreach(println)
+
+  // Parametric function: filter()
+  val evenNumbers = numbers.filter(_ % 2 == 0)
+  println("Even numbers: ")
+  evenNumbers.foreach(println)
+
+  // Recursion: factorial()
+  def factorial(n: Int): Int = {
+    if (n == 0) 1 else n * factorial(n - 1)
+  }
+
+  val fact = factorial(5)
+  println("Factorial of 5: " + fact)
+
+  // Function with default parameter value: sum()
+  def sum(numbers: Array[Int], start: Int = 0): Int = {
+    var total = start
+    numbers.foreach(total += _)
+    total
+  }
+
+  val totalSum = sum(numbers)
+  val partialSum = sum(numbers, 2)
+  println("Total sum: " + totalSum)
+  println("Partial sum (starting from 2): " + partialSum)
+
+  // Anonymous function: map()
+  val doubledNumbers = numbers.map(_ * 2)
+  println("Doubled numbers: ")
+  doubledNumbers.foreach(println)
+
+  def addCurry(x: Int)(y: Int): Int = {
+     |   x + y
+     | }
+
+  addCurry(20)(3)  => 23
+
+  // Nested function: isPositive()
+  def getPositiveNumbers(numbers: Array[Int]): Array[Int] = {
+    def isPositive(n: Int) = n > 0
+    numbers.filter(isPositive)
+  }
+
+  val positiveNumbers = getPositiveNumbers(Array(-3, -2, -1, 0, 1, 2, 3))
+  println("Positive numbers: ")
+  positiveNumbers.foreach(println)
+}
+
+
+
+
+
+
+B>
+
+// Define curried functions for addition and multiplication
+def add(x: Int)(y: Int): Int = x + y
+def multiply(x: Int)(y: Int): Int = x * y
+
+// Call the functions using currying syntax
+val num1 = 5
+val num2 = 3
+val result1 = add(num1)(num2) // Add num1 and num2
+val result2 = multiply(num1)(num2) // Multiply num1 and num2
+
+// Print the results
+println(s"$num1 + $num2 = $result1")
+println(s"$num1 * $num2 = $result2")
+
+

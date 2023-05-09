@@ -1,0 +1,84 @@
+Implement using Pig Mapreduce
+
+a> Implement a Mapreduce program to identify and analyze the tags specified (Genre,Adventure,Comedy,Romance,Action etc ) using movie lens data find the Low,High and average for each all genere wise
+
+b> Create a Mapreduce program to analyze Titanic ship data and perform the following
+	
+	1. Display the Gender wise count of passenger travelling in Titanice ship
+	2. To display the age wise count of passengers with different class labels as 
+		a. Children
+		b. Adult
+		c. Senior Citizens
+	3. Identify the Death and survival rate based on Gender
+	
+
+
+1   df = LOAD 'genres.csv' USING PigStorage(',') as ( movie:chararray, genre:chararray, budget:int, collection:int, views:int, likes:int, dislikes:int );
+2   genres = foreach df GENERATE (df.genre);
+3   limit_10 = LIMIT df 10;
+4   genres1 = foreach df GENERATE (genre,views);
+5   Comedy = FILTER df by genre == 'Comedy';
+6   data = FOREACH df GENERATE movie,genre,budget;
+7   romance = FILTER data by genre=='Romance';
+8   df_group = GROUP df by genre;
+9  
+10   budget_max = FOREACH df_group  GENERATE (df.movie, df.genre), MAX(df.budget);
+11   budget_min = FOREACH df_group  GENERATE (df.movie, df.genre), MIN(df.budget);
+12   budget_avg = FOREACH df_group  GENERATE (df.movie, df.genre), AVG(df.budget);
+
+
+
+titanic = LOAD 'titanic.csv' USING PigStorage(',') as ( survived:int, name:chararray, sex:chararray, age:int );
+14   titanic = LOAD 'titanic.csv' USING PigStorage(',') as ( id:int, survived:int, sex:chararray, age:int );
+15   SPLIT titanic into children if age<18, adult if (17<age and age<60), senior_citizen if age>60;
+
+
+
+
+		1. PIG WORD COUNT PROGRAM
+	
+step1: need to transfer .txt/.csv to the hdfs cluster
+step2: create filename.pig using gedit/sudo nano
+step3: file(.pig) should consists all the operators need to perform on the data
+	operators - LOAD, FOREACH, GROUP, 
+	STORE INTO '/p3/store/'
+	
+	in the store dir -> 2 files need to be there
+
+Enter Pig to enter into the platform
+
+step4: we need to run the pig program    run file.pig (file.pig is in the local system)
+step5: pwd   - to get the path  ( 2 files succ,fail)
+
+
+PIG FILE:
+
+records = LOAD '/p3/i1.txt/';
+terms = FOREACH records GENERATE FLATTEN(TOKENIZE((chararray) $0)) as word;
+grouped_terms = GROUP terms BY word;
+word_counts = FOREACH grouped_terms GENERATE COUNT(terms), group;
+STORE word_counts INTO '/p3/store/'
+
+
+--------- program exec and output  -------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
